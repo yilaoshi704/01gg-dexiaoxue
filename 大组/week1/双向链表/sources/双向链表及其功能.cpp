@@ -1,46 +1,54 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// 定义链表节点结构
+// 定义双向链表节点结构
 typedef struct Node {
     int data;
+    struct Node* prev;
     struct Node* next;
-}node;
+} node;
 
 // 创建新节点
 node* create(int data) {
-    node* newnode = (node *)malloc(sizeof(node));
+    node* newnode = (node*)malloc(sizeof(node));
     if (newnode == NULL) {
         printf("内存分配失败\n");
         exit(1);
     }
     newnode->data = data;
+    newnode->prev = NULL;
     newnode->next = NULL;
     return newnode;
 }
 
-// 在链表头部插入节点
+// 在双向链表头部插入节点
 void instart(node** head, int data) {
     node* newnode = create(data);
-    newnode->next = *head;
-    *head = newnode;
-}
-
-// 在链表尾部插入节点
-void inend(node** head, int data) {
-    node* newnode = create(data);
-    node* last = *head;
     if (*head == NULL) {
         *head = newnode;
-        return;
+    } else {
+        (*head)->prev = newnode;
+        newnode->next = *head;
+        *head = newnode;
     }
-    while (last->next != NULL) {
-        last = last->next;
-    }
-    last->next = newnode;
 }
 
-// 在指定位置插入节点
+// 在双向链表尾部插入节点
+void inend(node** head, int data) {
+    node* newnode = create(data);
+    if (*head == NULL) {
+        *head = newnode;
+    } else {
+        node* last = *head;
+        while (last->next != NULL) {
+            last = last->next;
+        }
+        last->next = newnode;
+        newnode->prev = last;
+    }
+}
+
+// 在双向链表指定位置插入节点
 void inany(node** head, int data, int position) {
     if (position < 0) {
         printf("无效位置\n");
@@ -64,10 +72,14 @@ void inany(node** head, int data, int position) {
         return;
     }
     newnode->next = current->next;
+    newnode->prev = current;
+    if (current->next != NULL) {
+        current->next->prev = newnode;
+    }
     current->next = newnode;
 }
 
-// 删除指定位置的节点
+// 删除双向链表指定位置的节点
 void deleteany(node** head, int position) {
     if (*head == NULL) {
         printf("链表为空\n");
@@ -76,22 +88,27 @@ void deleteany(node** head, int position) {
     node* temp = *head;
     if (position == 0) {
         *head = temp->next;
+        if (*head != NULL) {
+            (*head)->prev = NULL;
+        }
         free(temp);
         return;
     }
-    for (int i = 0; temp != NULL && i < position - 1; i++) {
+    for (int i = 0; temp != NULL && i < position; i++) {
         temp = temp->next;
     }
-    if (temp == NULL || temp->next == NULL) {
+    if (temp == NULL) {
         printf("位置超出链表长度\n");
         return;
     }
-    node* next = temp->next->next;
-    free(temp->next);
-    temp->next = next;
+    temp->prev->next = temp->next;
+    if (temp->next != NULL) {
+        temp->next->prev = temp->prev;
+    }
+    free(temp);
 }
 
-// 显示链表中的所有节点
+// 显示双向链表中的所有节点
 void display(node* head) {
     node* current = head;
     if (current == NULL) {
@@ -106,7 +123,7 @@ void display(node* head) {
     printf("\n");
 }
 
-// 查询节点
+// 查询双向链表节点
 void searchnode(node* head, int key) {
     node* current = head;
     int position = 0;
@@ -125,7 +142,7 @@ int main() {
     node* head = NULL;
     int choice, data, position, key;
     do {
-        printf("\n单向链表操作菜单\n");
+        printf("\n双向链表操作菜单\n");
         printf("1. 在链表头部插入节点\n");
         printf("2. 在链表尾部插入节点\n");
         printf("3. 在指定位置插入节点\n");
