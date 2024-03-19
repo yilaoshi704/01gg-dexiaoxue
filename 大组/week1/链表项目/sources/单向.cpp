@@ -1,11 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-// 定义链表节点结构
-typedef struct Node {
-    int data;
-    struct Node* next;
-}node;
+#include "touwenjian.h" 
 
 // 创建新节点
 node* create(int data) {
@@ -191,9 +184,10 @@ node* digui(node* head) {
     head->next = NULL;
     return newhead;
 } 
-int main() {
-    node* head = NULL;
-    int choice, data, position, key, n = 0;
+void caidan1(){
+	node* head = NULL;
+	int n = 0;
+    int choice, data, position, key;
     do {
         printf("\n单向链表操作菜单（默认从第0个结点开始）\n");
         printf("1. 在链表头部插入节点\n");
@@ -208,31 +202,56 @@ int main() {
         printf("10. 递归反转\n");
         printf("11. 退出\n");
         printf("请选择操作: ");
-        scanf("%d", &choice);
+        if (scanf("%d", &choice) != 1) {
+        	while (getchar() != '\n');
+    		printf("输入错误，请输入一个整数\n");
+    		continue; // 继续循环，等待用户重新输入
+		}
         switch (choice) {
             case 1:
                 printf("输入要插入的值: ");
-                scanf("%d", &data);
-                n++;
-                instart(&head, data);
-                break;
+				if (scanf("%d", &data) != 1) {
+    			// 清空输入缓冲区
+    				while (getchar() != '\n');
+    				printf("输入错误，请输入一个整数\n");
+    				continue; // 继续循环，等待用户重新输入
+				}
+				n++;
+				instart(&head, data);
+				break; 
             case 2:
                 printf("输入要插入的值: ");
-                scanf("%d", &data);
+                if (scanf("%d", &data) != 1) {
+        			while (getchar() != '\n');
+    				printf("输入错误，请输入一个整数\n");
+    				continue; // 继续循环，等待用户重新输入
+				}
                 n++;
                 inend(&head, data);
                 break;
             case 3:
                 printf("输入要插入的值: ");
-                scanf("%d", &data);
+                if (scanf("%d", &data) != 1) {
+        			while (getchar() != '\n');
+    				printf("输入错误，请输入一个整数\n");
+    				continue; // 继续循环，等待用户重新输入
+				}
                 printf("输入要插入的位置: ");
-                scanf("%d", &position);
+                if (scanf("%d", &position) != 1) {
+        			while (getchar() != '\n');
+    				printf("输入错误，请输入一个整数\n");
+    				continue; // 继续循环，等待用户重新输入
+				}
                 n++;
                 inany(&head, data, position);
                 break;
             case 4:
                 printf("输入要删除的位置: ");
-                scanf("%d", &position);
+                if (scanf("%d", &position) != 1) {
+        			while (getchar() != '\n');
+    				printf("输入错误，请输入一个整数\n");
+    				continue; // 继续循环，等待用户重新输入
+				}
                 n--;
                 deleteany(&head, position);
                 break;
@@ -241,7 +260,11 @@ int main() {
                 break;
             case 6:
                 printf("输入要查询的节点值: ");
-                scanf("%d", &key);
+                if (scanf("%d", &key) != 1) {
+        			while (getchar() != '\n');
+    				printf("输入错误，请输入一个整数\n");
+    				continue; // 继续循环，等待用户重新输入
+				}
                 searchnode(head, key);
                 break;
             case 7:
@@ -263,5 +286,5 @@ int main() {
                 printf("无效选择，请重新输入\n");
         }
     } while (choice != 11);
-    return 0;
-}
+    return;
+} 
