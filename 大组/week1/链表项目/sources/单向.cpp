@@ -1,5 +1,26 @@
 #include "touwenjian.h" 
 
+int getInput() {
+    int input;
+    while (1) {
+        if (scanf("%d", &input) != 1) {
+            // 清空输入缓冲区
+            while (getchar() != '\n');
+            printf("输入错误，请输入一个整数\n");
+        } else {
+            // 检查输入缓冲区是否为空
+            if (getchar() != '\n') {
+                // 清空输入缓冲区
+                while (getchar() != '\n');
+                printf("输入错误，请输入一个整数\n");
+            } else {
+                // 输入正确，退出循环
+                break;
+            }
+        }
+    }
+    return input;
+} 
 // 创建新节点
 node* create(int data) {
     node* newnode = (node *)malloc(sizeof(node));
@@ -210,48 +231,27 @@ void caidan1(){
         switch (choice) {
             case 1:
                 printf("输入要插入的值: ");
-				if (scanf("%d", &data) != 1) {
-    			// 清空输入缓冲区
-    				while (getchar() != '\n');
-    				printf("输入错误，请输入一个整数\n");
-    				continue; // 继续循环，等待用户重新输入
-				}
+				data = getInput();
 				n++;
 				instart(&head, data);
 				break; 
             case 2:
                 printf("输入要插入的值: ");
-                if (scanf("%d", &data) != 1) {
-        			while (getchar() != '\n');
-    				printf("输入错误，请输入一个整数\n");
-    				continue; // 继续循环，等待用户重新输入
-				}
+                data = getInput();
                 n++;
                 inend(&head, data);
                 break;
             case 3:
                 printf("输入要插入的值: ");
-                if (scanf("%d", &data) != 1) {
-        			while (getchar() != '\n');
-    				printf("输入错误，请输入一个整数\n");
-    				continue; // 继续循环，等待用户重新输入
-				}
+                data = getInput();
                 printf("输入要插入的位置: ");
-                if (scanf("%d", &position) != 1) {
-        			while (getchar() != '\n');
-    				printf("输入错误，请输入一个整数\n");
-    				continue; // 继续循环，等待用户重新输入
-				}
+                position = getInput();
                 n++;
                 inany(&head, data, position);
                 break;
             case 4:
                 printf("输入要删除的位置: ");
-                if (scanf("%d", &position) != 1) {
-        			while (getchar() != '\n');
-    				printf("输入错误，请输入一个整数\n");
-    				continue; // 继续循环，等待用户重新输入
-				}
+                position = getInput();
                 n--;
                 deleteany(&head, position);
                 break;
@@ -260,11 +260,7 @@ void caidan1(){
                 break;
             case 6:
                 printf("输入要查询的节点值: ");
-                if (scanf("%d", &key) != 1) {
-        			while (getchar() != '\n');
-    				printf("输入错误，请输入一个整数\n");
-    				continue; // 继续循环，等待用户重新输入
-				}
+                key = getInput();
                 searchnode(head, key);
                 break;
             case 7:
@@ -287,4 +283,4 @@ void caidan1(){
         }
     } while (choice != 11);
     return;
-} 
+}

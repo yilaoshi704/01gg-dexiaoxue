@@ -152,45 +152,24 @@ void caidan2() {
         switch (choice) {
             case 1:
                 printf("输入要插入的值: ");
-                if (scanf("%d", &data) != 1) {
-    			// 清空输入缓冲区
-    				while (getchar() != '\n');
-    				printf("输入错误，请输入一个整数\n");
-    				continue; // 继续循环，等待用户重新输入
-				}
+                data = getInput();
                 instart1(&head, data);
                 break;
             case 2:
                 printf("输入要插入的值: ");
-                if (scanf("%d", &data) != 1) {
-        			while (getchar() != '\n');
-    				printf("输入错误，请输入一个整数\n");
-    				continue; // 继续循环，等待用户重新输入
-				}
+                data = getInput();
                 inend1(&head, data);
                 break;
             case 3:
                 printf("输入要插入的值: ");
-                if (scanf("%d", &data) != 1) {
-        			while (getchar() != '\n');
-    				printf("输入错误，请输入一个整数\n");
-    				continue; // 继续循环，等待用户重新输入
-				}
+                data = getInput();
                 printf("输入要插入的位置: ");
-                if (scanf("%d", &position) != 1) {
-        			while (getchar() != '\n');
-    				printf("输入错误，请输入一个整数\n");
-    				continue; // 继续循环，等待用户重新输入
-				}
+                position = getInput();
                 inany1(&head, data, position);
                 break;
             case 4:
                 printf("输入要删除的位置: ");
-                if (scanf("%d", &position) != 1) {
-        			while (getchar() != '\n');
-    				printf("输入错误，请输入一个整数\n");
-    				continue; // 继续循环，等待用户重新输入
-				}
+                position = getInput();
                 deleteany1(&head, position);
                 break;
             case 5:
@@ -198,12 +177,8 @@ void caidan2() {
                 break;
             case 6:
                 printf("输入要查询的节点值: ");
-                if (scanf("%d", &key) != 1) {
-        			while (getchar() != '\n');
-    				printf("输入错误，请输入一个整数\n");
-    				continue; // 继续循环，等待用户重新输入
-				}
-                searchnode1(head, key);
+                key = getInput();
+				searchnode1(head, key);
                 break;
             case 7:
                 printf("程序退出\n");

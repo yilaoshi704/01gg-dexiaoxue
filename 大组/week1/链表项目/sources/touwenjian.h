@@ -15,7 +15,7 @@ typedef struct Node {
     struct Node* next;
 }node;
 
-int getInput();
+int getInput(); 
 node* create(int data);
 void instart(node** head, int data);
 void inend(node** head, int data);
@@ -26,8 +26,6 @@ void searchnode(node* head, int key);
 void swap(node** head);
 void findmid(node *head, int n);
 void feidigui(node** head);
-
-    
 node* digui(node* head);
 
 node1* create1(int data);
