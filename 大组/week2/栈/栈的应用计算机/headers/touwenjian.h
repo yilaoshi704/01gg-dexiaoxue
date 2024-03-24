@@ -3,7 +3,9 @@
 #include <ctype.h>
 #include <string.h>
 #include <limits.h>
+#include <stdbool.h>
 
+#define ERROR LLONG_MIN
 typedef struct Stack {
     long long* data;
     long long top;
@@ -11,7 +13,7 @@ typedef struct Stack {
     int isFull;
 } Stack;
 int getInput();
-int isValidExpression(char* expression); 
+bool isValidExpression(char* expression); 
 Stack* createStack(int size);
 void push(Stack* stack, long long value);
 long long pop(Stack* stack);

@@ -17,43 +17,53 @@ Stack* createStack(int size) {
     return stack;
 }
 
-
-int isValidExpression(char* expression) {
+bool isValidExpression(char* expression) {
     int len = strlen(expression);
     char prevChar = '\0';
     int operatorCount = 0;
     int operandCount = 0;
+    bool inParentheses = false;
+    int digitCount = 0; // 新增：用于计数操作数的位数
 
     for (int i = 0; i < len; i++) {
         char ch = expression[i];
         if (isdigit(ch) || ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '(' || ch == ')') {
             if (isdigit(ch)) {
+                digitCount++; // 如果是数字，增加位数计数
+                if (digitCount > 19) { // 如果操作数超过19位，判定为错误
+                    return false;
+                }
                 operandCount++;
                 if (i > 0 && isOperator(prevChar)) {
                     operatorCount--;
                 }
             } else if (isOperator(ch)) {
+                digitCount = 0; // 如果是运算符，重置位数计数
                 operatorCount++;
-                if (i == 0 || prevChar == '(') {
-                    return 0; // 表达式开始处或括号后面直接跟运算符，判定为错误
+                if ((i == 0 || prevChar == '(') && ch != '-' && ch != '+') {
+                    return false; // 表达式开始处或括号后面直接跟除负号和正号外的其他运算符，判定为错误
                 }
             }
             if ((ch == '+' || ch == '-' || ch == '*' || ch == '/') && (prevChar == '+' || prevChar == '-' || prevChar == '*' || prevChar == '/')) {
-                return 0; // 连续运算符判定为错误
+                return false; // 连续运算符判定为错误
+            }
+            if (ch == '/' && expression[i + 1] == '0') {
+                return false; // 除数为0，判定为错误
             }
             prevChar = ch;
-        } else if (!isspace(ch)) {
-            return 0; // 非法字符判定为错误
+        } else if (ch == ' ') {
+            continue; // 空格跳过
+        } else {
+            return false; // 非法字符判定为错误
         }
     }
 
     if (operatorCount >= operandCount) {
-        return 0; // 运算符数量大于等于操作数数量，判定为错误
+        return false; // 运算符数量大于等于操作数数量，判定为错误
     }
 
-    return 1; // 输入合法
+    return true; // 输入合法
 }
-
 
 void push(Stack* stack, long long value) {
     if (stack->top == stack->size - 1) {
@@ -129,7 +139,7 @@ long long evaluate(char* expression) {
         long long result = atoll(expression);
         if (result == LLONG_MAX && strcmp(expression, "9223372036854775807") != 0) {
             printf("输入错误，数字超过最大值\n");
-            return -1;
+            return ERROR;
         }
         return result;
     }
@@ -152,17 +162,35 @@ long long evaluate(char* expression) {
         } else if (expression[i] == ')') {
             while (!isEmpty(ops) && peek(ops) != '(') {
                 long long val2 = pop(values);
+                if (isEmpty(values)) { // 如果操作数栈为空，表示括号中只有一个操作数
+                    push(values, val2); // 将这个操作数压入结果栈
+                    break;
+                }
                 long long val1 = pop(values);
                 char op = pop(ops);
+                if (op == '/' && val2 == 0) {
+                    printf("除数为0，表达式错误\n");
+                    return ERROR;
+                }
                 push(values, calculate(val1, val2, op));
             }
             if (!isEmpty(ops))
                 pop(ops);
         } else if (isOperator(expression[i])) {
+            // 如果遇到负号，并且负号前面没有操作数，将负号视为负一乘以后面的操作数
+            if (expression[i] == '-' && (i == 0 || expression[i - 1] == '(')) {
+                push(values, -1);
+                push(ops, '*');
+                continue;
+            }
             while (!isEmpty(ops) && precedence(peek(ops)) >= precedence(expression[i])) {
                 long long val2 = pop(values);
                 long long val1 = pop(values);
                 char op = pop(ops);
+                if (op == '/' && val2 == 0) {
+                    printf("除数为0，表达式错误\n");
+                    return ERROR;
+                }
                 push(values, calculate(val1, val2, op));
             }
             push(ops, expression[i]);
@@ -173,11 +201,16 @@ long long evaluate(char* expression) {
         long long val2 = pop(values);
         long long val1 = pop(values);
         char op = pop(ops);
+        if (op == '/' && val2 == 0) {
+            printf("除数为0，表达式错误\n");
+            return ERROR;
+        }
         push(values, calculate(val1, val2, op));
     }
 
     return pop(values);
 }
+
 
 int getInput() {
     int input;

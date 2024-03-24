@@ -11,8 +11,8 @@ int main() {
             continue;
         }
         long long result = evaluate(expression);
-        if (result == -1) {
-            printf("计算错误，可能是因为栈溢出\n");
+        if (result == ERROR) {
+            printf("计算错误，可能是因为栈溢出,除数为0等等\n");
             continue;
         }
         printf("Result: %lld\n", result);
