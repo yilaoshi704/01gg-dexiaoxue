@@ -1,5 +1,6 @@
 #ifndef LQUEUE_H_INCLUDED
 #define LQUEUE_H_INCLUDED
+#define MAX_LENGTH 100
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -32,6 +33,7 @@ Status DeLQueue(LQueue *Q);
 void ClearLQueue(LQueue *Q);
 Status TraverseLQueue(const LQueue *Q, void (*foo)(void *q));
 void LPrint(void *q);
+void newinput(char *input);
 #endif 
 
 

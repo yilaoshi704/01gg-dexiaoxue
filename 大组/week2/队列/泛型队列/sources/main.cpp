@@ -1,12 +1,14 @@
 #include "touwenjian.h"
 
+
 int main() {
     LQueue Q;
     InitLQueue(&Q);
     int choice;
     char data[30];
     char type;					
-	char datatype[30];	
+	char datatype[30];
+	char *input = (char *)malloc(sizeof(char) * MAX_LENGTH); 
 
     while (1) {
         printf("\n1. 入队\n");
@@ -21,16 +23,16 @@ int main() {
         switch (choice) {
             case 1:
                 printf("输入要入队的数据：");
-                scanf("%s", data);
-                EnLQueue(&Q, data);
+				newinput(input);
+				scanf("%s", input);
+				EnLQueue(&Q, input);  // 将 const char* 转换为 void* 进行传递
                 break;
             case 2:
-                DeLQueue(&Q);
+                if (!DeLQueue(&Q)) printf("队列为空！\n");
                 break;
             case 3:
                 if (!GetHeadLQueue(&Q, data)) {
                 	printf("队列为空！\n"); 
-					getchar(); 
                 	break;
 				} 
                 printf("队头元素为：%s\n", data);

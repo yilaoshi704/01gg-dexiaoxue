@@ -24,7 +24,7 @@ Status GetHeadLQueue(LQueue *Q, void *e) {
     if (IsEmptyLQueue(Q)) {
         return FALSE;
     }
-    e = Q->front->next->data;
+    memcpy(e, Q->front->next->data, sizeof(void*)); // 使用memcpy将数据拷贝到e指向的内存空间中
     return TRUE;
 }
 
@@ -32,13 +32,24 @@ int LengthLQueue(LQueue *Q) {
     return Q->length;
 }
 
+// EnLQueue 函数的定义
 Status EnLQueue(LQueue *Q, void *data) {
     Node *newNode = (Node *)malloc(sizeof(Node));
     if (!newNode) {
         printf("入队失败，内存分配错误\n");
         return FALSE;
     }
-    newNode->data = data;
+    
+    // 复制输入数据
+    const char *charData = static_cast<const char *>(data);  // 进行类型转换
+    char *dataCopy = strdup(charData);
+    if (!dataCopy) {
+        printf("入队失败，字符串复制错误\n");
+        free(newNode);
+        return FALSE;
+    }
+    
+    newNode->data = dataCopy;
     newNode->next = NULL;
     Q->rear->next = newNode;
     Q->rear = newNode;
@@ -52,6 +63,7 @@ Status DeLQueue(LQueue *Q) {
     }
     Node *temp = Q->front->next;
     Q->front->next = temp->next;
+    printf("值为%s的队头已经出队", temp->data);
     if (Q->rear == temp) {
         Q->rear = Q->front;
     }
@@ -99,4 +111,8 @@ int getInput() {
         }
     }
     return input;
+}
+
+void newinput(char *input) {
+	input = (char *)malloc(sizeof(char) * MAX_LENGTH);
 }
